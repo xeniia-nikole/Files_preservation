@@ -1,6 +1,8 @@
 package Preservation;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -23,7 +25,6 @@ public class Main {
 
         zipFiles("C:/Users/503242115/Games/savegames/zip.zip", files);
 
-
     }
 
     public static void saveGame(String path, GameProgress save) {
@@ -32,27 +33,37 @@ public class Main {
              ObjectOutputStream oos =
                      new ObjectOutputStream(fos)) {
             oos.writeObject(save);
-            System.out.println(">> Saving " + save + " was done successfully");
+            System.out.println(">> Saving " + save + " was created successfully");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     public static void zipFiles(String zipName, List<String> files) {
-        try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(zipName));) {
+        try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(zipName))) {
             for (String fileName : files) {
                 FileInputStream fis = new FileInputStream(fileName);
                 ZipEntry entry = new ZipEntry(fileName);
                 zout.putNextEntry(entry);
                 byte[] buffer = new byte[fis.available()];
-                fis.read(buffer);
+//                fis.read(buffer);
                 // добавляем содержимое к архиву
                 zout.write(buffer);
                 System.out.println(">> Zipping " + fileName + " was done successfully");
                 // закрываем текущую запись для новой записи
                 zout.closeEntry();
-                File file = new File(fileName);
-                if (file.delete()) {
+                fis.close();
+            }
+            delete(files);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public static void delete(List<String> files) {
+        try {
+            for (String fileName : files) {
+                if (Files.deleteIfExists(Paths.get(fileName))) {
                     System.out.println(">> File " + fileName + " was deleted");
                 } else System.out.println(">> File " + fileName + " was not found!!!");
             }
