@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class Main {
@@ -14,24 +15,23 @@ public class Main {
         GameProgress save2 = new GameProgress(78, 10, 48, 2452.96);
         GameProgress save3 = new GameProgress(5, 31, 107, 9963.27);
 
-        saveGame("C:/Users/503242115/Games/savegames/save1.dat", save1);
-        saveGame("C:/Users/503242115/Games/savegames/save2.dat", save2);
-        saveGame("C:/Users/503242115/Games/savegames/save3.dat", save3);
+        saveGame("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save1.dat", save1);
+        saveGame("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save2.dat", save2);
+        saveGame("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save3.dat", save3);
 
         List<String> files = new ArrayList<>();
-        files.add("C:/Users/503242115/Games/savegames/save1.dat");
-        files.add("C:/Users/503242115/Games/savegames/save2.dat");
-        files.add("C:/Users/503242115/Games/savegames/save3.dat");
+        files.add("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save1.dat");
+        files.add("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save2.dat");
+        files.add("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save3.dat");
 
-        zipFiles("C:/Users/503242115/Games/savegames/zip.zip", files);
+
+        zipFiles("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/zip.zip", files);
 
     }
 
-    public static void saveGame(String path, GameProgress save) {
-        try (FileOutputStream fos =
-                     new FileOutputStream(path);
-             ObjectOutputStream oos =
-                     new ObjectOutputStream(fos)) {
+    public static void saveGame(String filename, GameProgress save) {
+        try ( ObjectOutputStream oos =
+                     new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(save);
             System.out.println(">> Saving " + save + " was created successfully");
         } catch (Exception ex) {
@@ -46,7 +46,7 @@ public class Main {
                 ZipEntry entry = new ZipEntry(fileName);
                 zout.putNextEntry(entry);
                 byte[] buffer = new byte[fis.available()];
-//                fis.read(buffer);
+                fis.read(buffer);
                 // добавляем содержимое к архиву
                 zout.write(buffer);
                 System.out.println(">> Zipping " + fileName + " was done successfully");
@@ -71,4 +71,6 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
+
+
 }
