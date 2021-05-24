@@ -6,30 +6,26 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class Main {
+    public static String FILEPATH = "C:/Users/503242115/IdeaProjects/Initial/Games/savegames" + File.separator;
     public static void main(String[] args) {
         GameProgress save1 = new GameProgress(100, 1, 5, 50);
         GameProgress save2 = new GameProgress(78, 10, 48, 2452.96);
         GameProgress save3 = new GameProgress(5, 31, 107, 9963.27);
 
-        saveGame("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save1.dat", save1);
-        saveGame("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save2.dat", save2);
-        saveGame("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save3.dat", save3);
-
         List<String> files = new ArrayList<>();
-        files.add("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save1.dat");
-        files.add("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save2.dat");
-        files.add("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/save3.dat");
+        files.add(saveGame(FILEPATH + "save1.dat", save1));
+        files.add(saveGame(FILEPATH + "save2.dat", save2));
+        files.add(saveGame(FILEPATH + "save3.dat", save3));
 
 
-        zipFiles("C:/Users/503242115/IdeaProjects/Initial/Games/savegames/zip.zip", files);
+        zipFiles(FILEPATH + "zip.zip", files);
 
     }
 
-    public static void saveGame(String filename, GameProgress save) {
+    public static String saveGame(String filename, GameProgress save) {
         try ( ObjectOutputStream oos =
                      new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(save);
@@ -37,6 +33,7 @@ public class Main {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+        return filename;
     }
 
     public static void zipFiles(String zipName, List<String> files) {
